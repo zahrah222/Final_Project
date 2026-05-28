@@ -1,29 +1,34 @@
-import {useState, useEffect} from 'react';
-import WorldMap from './WorldMap';
-import BookSearch from './BookSearch';
-import './App.css';
+import { useState } from 'react'
+import WorldMap from './WorldMap.jsx'
+import BookSearch from './BookSearch.jsx'
+import BookItemComponent from './BookItemComponent.jsx'
+import './App.css'
 
 function App() {
-  const [books, setBooks] = useState([]);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [books, setBooks] = useState([])
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   function addBook(title, author, cover, country) {
     if (!country) {
-        alert('Please select a country for the book.');
-        return;     
+      alert('Please select a country for the book.')
+      return
     }
-    const newBook = { id: books.length + 1, title, author, cover, country };
-    setBooks([...books, newBook]);  
+    const newBook = { id: books.length + 1, title, author, cover, country }
+    setBooks([...books, newBook])
   }
-  const readCountries = books.map(book => book.country);
 
-    return (
-        <div id="app-wrapper">
-            <header> id = "header"
-                <h1>Book Explorer</h1>
-                <span className ="selected-label">{selectedCountry ? `Selected Country: ${selectedCountry}` : 'Click a country to select it'}</span>
+  const readCountries = books.map((book) => book.country)
+
+  return (
+    <div id="app-wrapper">
+      <header id="header">
+        <h1>Book Explorer</h1>
+        <span className="selected-label">
+          {selectedCountry ? `Selected Country: ${selectedCountry}` : 'Click a country to select it'}
+        </span>
       </header>
-        <main id="main-content">
+
+      <main id="main-content">
         <div id="map-area">
           <WorldMap
             readCountries={readCountries}
