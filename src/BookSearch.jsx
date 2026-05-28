@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState } from 'react'
+import countriesData from './countries.geo.json'
+
 
 function BookSearch({ selectedCountry, addBook }) {
     const [query, setQuery] = useState('');
+    const [country, setCountry] = useState('')
     const [results, setResults] = useState([]);
     
+    const countryNames = countriesData.features
+        .map((feature) => feature.properties.name)
+        .sort()
+
     function searchBooks() {
-        if (!selectedCountry) {
-            alert('Please select a country first.');
+        if (!query) {
+            alert('Please enter a book title.');
             return;
         }
         fetch(`https://openlibrary.org/search.json?title=${query}&country=${selectedCountry}`)
@@ -16,7 +23,17 @@ function BookSearch({ selectedCountry, addBook }) {
     }
 
     function handleAddBook(book) {
-        addBook(book.title, book.author_name ? book.author_name[0] : 'Unknown Author', `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`, selectedCountry);
+        if (!country) {
+            alert('Please select a country for the book.');
+            return;
+        }
+        addBook(
+            book.title,
+            book.author_name ? book.author_name[0] : 'Unknown Author', 
+            `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`, 
+            country
+        )
+
     }
 
     return (
@@ -30,22 +47,34 @@ function BookSearch({ selectedCountry, addBook }) {
                 />
                 <button onClick={searchBooks}>Search</button>
             </div>
-            <div id="search-results">
-                {results.map((book) => (
-                    <div key={book.key} className="search-result-item">
-                        <img src={`https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`} alt={`${book.title} cover`} />
-                        <div className="book-info">
-                            <h3>{book.title}</h3>
-                            <p>{book.author_name ? book.author_name[0] : 'Unknown Author'}</p>
-                             <button type="button" className="add-book-btn" onClick={() => handleAddBook(book)}>
-                                ➕ Add
-                            </button>
-                        </div>
-                    </div>
-                ))}
+             <select
+        className="country-select"
+        value={country}
+        onChange={(e) => setCountry(e.target.value)}
+      >
+        <option value="">-- Choose a country --</option>
+        {countryNames.map((name) => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+
+      <div id="search-results">
+        {results.map((book) => (
+          <div key={book.key} className="search-result-item">
+            <img src={`https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`} alt={`${book.title} cover`} />
+            <div className="book-info">
+              <h3>{book.title}</h3>
+              <p>{book.author_name ? book.author_name[0] : 'Unknown Author'}</p>
+              <button type="button" className="add-book-btn" onClick={() => handleAddBook(book)}>
+                ➕ Add
+              </button>
             </div>
-        </div>
-    )
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default BookSearch
+            

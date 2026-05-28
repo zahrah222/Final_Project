@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import WorldMap from './WorldMap';
 import BookSearch from './BookSearch.jsx';
-import BookItemComponent from './BookItemCompenent.jsx';
+import BookItemComponent from './BookItemComponent.jsx';
 import './App.css';
 
 function App() {
@@ -23,22 +23,17 @@ function App() {
     <div id="app-wrapper">
       <header id="header"> {/* Fixed: id was outside the tag as plain text */}
         <h1>Book Explorer</h1>
-        <span className="selected-label">
-          {selectedCountry ? `Selected Country: ${selectedCountry}` : 'Click a country to select it'}
-        </span>
       </header>
 
       <main id="main-content">
         <div id="map-area">
           <WorldMap
             readCountries={readCountries}
-            selectedCountry={selectedCountry}
-            setSelectedCountry={setSelectedCountry}
           />
         </div>
 
         <aside id="side-panel">
-          <BookSearch selectedCountry={selectedCountry} addBook={addBook} />
+          <BookSearch addBook={addBook} />
           <div id="book-list">
             {books.map((book) => (
               <BookItemComponent
