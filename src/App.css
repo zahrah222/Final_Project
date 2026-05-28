@@ -1,0 +1,101 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: sans-serif;
+}
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #333;
+}
+#header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+.selected-label {
+  font-size: small;
+  color: #555555;
+}
+#main-content {
+  display: flex;
+  height: calc(100vh - 65px);
+  width: 100%;
+}
+#map-area {
+  flex: 2;
+  height: 100%;
+}
+#side-panel {
+  flex: 1;
+  background-color: #d4d4d4;
+  padding: 15px;
+  overflow-y: auto;
+}
+.search-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.search-input {
+  flex: 1;
+  padding: 8px;
+  border: 1.5px solid #333;
+  border-radius: 6px;
+}
+.search-btn,
+.add-book-btn {
+  background-color: #fff;
+  font-size: small;
+  color: #555555;
+  padding: 8px 10px;
+  border: 1.5px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.result-title {
+  font-size: 13px;
+}
+#book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+.book-item {
+  width: 140px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+}
+.book-cover {
+  width: 100%;
+  border-radius: 4px;
+}
+.book-item h3 {
+  margin: 5px 0 2px 0;
+  font-size: 14px;
+}
+.book-item p {
+  margin: 0;
+  font-size: 12px;
+}
+.book-country {
+  color: #555;
+}
+
