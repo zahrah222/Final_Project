@@ -2,7 +2,7 @@ import { useState } from 'react';
 import WorldMap from './WorldMap';
 import BookSearch from './BookSearch.jsx';
 import BookItemComponent from './BookItemComponent.jsx';
-import StatsComponent from './StatsComponent';
+import Stats from './Statslist.jsx';
 import { collection, getDocs, addDoc,query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -68,7 +68,7 @@ async function addBook(title, author, cover, country) {
   function handleSignOut() {
     signOut(auth);
   }
-  
+
   const readCountries = books.map(book => book.country);
 
   return (
