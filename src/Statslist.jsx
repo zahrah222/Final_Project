@@ -1,31 +1,44 @@
-export default function Stats() {
-    const totalBooks = books.length;
-    const countryCounts = books.reduce((acc, book) => {
-    acc[book.country] = (acc[book.country] || 0) + 1;
-    return acc;
-  }, {});
+import { useState } from 'react';
 
-  const countriesExplored = Object.keys(countryCounts).length;
+export default function Stats({ books }) {
+  const [open, setOpen] = useState(false);
 
-  const topCountry = Object.entries(countryCounts)
-    .sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—';
-
-  if (totalBooks === 0) return null;
+  const totalBooks = books.length;
+  const totalCountries = new Set(books.map(b => b.country)).size;
 
   return (
-        <div id="stats">
-      <div className="stat">
-        <span className="stat-value">{totalBooks}</span>
-        <span className="stat-label">Books read</span>
-      </div>
-      <div className="stat">
-        <span className="stat-value">{countriesExplored}</span>
-        <span className="stat-label">Countries explored</span>
-      </div>
-      <div className="stat">
-        <span className="stat-value">{topCountry}</span>
-        <span className="stat-label">Top country</span>
-      </div>
+    <div className="stats-wrapper">
+      <button className="stats-toggle-btn" onClick={() => setOpen(!open)}>
+        <span>📊 Stats</span>
+        <span>{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div className="stats-dropdown">
+          <div className="stats-row">
+            <div className="stat">
+              <span className="stat-value">{totalBooks}</span>
+              <span className="stat-label">Books</span>
+            </div>
+            <div className="stat">
+              <span className="stat-value">{totalCountries}</span>
+              <span className="stat-label">Countries</span>
+            </div>
+          </div>
+
+          <div className="stats-covers">
+            {books.map(book => (
+              <img
+                key={book.id}
+                src={book.cover}
+                alt={book.title}
+                title={book.title}
+                className="stats-cover-img"
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

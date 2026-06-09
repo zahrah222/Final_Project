@@ -23,8 +23,17 @@ function Login({ onSwitchToSignup }) {
   }
 
  return (
+    <div>
+        <header id="header">
+        <h1>Book Explorer</h1>
+        </header>
     <div className="auth-wrapper">
       <div className="auth-card">
+        <img
+        className="auth-banner"
+        src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800&q=80"
+        alt="books"
+        />
         <h2>Log in</h2>
         <form className="auth-form" onSubmit={loginUser}>
           <label htmlFor="email">Email:</label>
@@ -55,7 +64,13 @@ function Login({ onSwitchToSignup }) {
         <p className="auth-switch">
           New user? Sign up <span onClick={() => navigate("/signup")}>here</span>
         </p>
+        <p className="auth-quote">"A reader lives a thousand lives." — George R.R. Martin</p>
       </div>
+      <p className="auth-blurb">
+      Track every book you read, pinned to the country it came from. 
+      Explore the world, one book at a time.
+    </p>
+    </div>
     </div>
   );
 }

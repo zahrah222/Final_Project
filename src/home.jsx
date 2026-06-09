@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WorldMap from './WorldMap';
 import BookSearch from './BookSearch.jsx';
 import BookItemComponent from './BookItemComponent.jsx';
@@ -8,47 +8,54 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from './firebase';
 import './App.css';
+import './home.css'
 
 function Home() {
     const [user, setUser] = useState(null);
     const [books, setBooks] = useState([]);
-    const [navigate] = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
-            if (currentUser) {
-                setUser(currentUser);
-            } else {
-                navigate('/login');
-            }
-        });
-    }, [navigate]);
+  const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      setUser(currentUser);
+    } else {
+      navigate('/login');
+    }
+  });
+  return () => unsubscribeAuth(); // ← cleanup lives here
+}, [navigate]);
 
-    useEffect(() => {
-        if (!user) return;
+useEffect(() => {
+  if (!user) return;
 
-        const booksQuery = query(
-            collection(db, 'books'),
-            where('userId', '==', user.uid),
-            orderBy('timestamp', 'desc')
-        );
+  const booksQuery = query(
+    collection(db, 'books'),
+    where('userId', '==', user.uid),
+    orderBy('timestamp', 'desc')
+  );
 
-    const unsubscribeBooks = onSnapshot(booksQuery, (snapshot) => {
-        const booksData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setBooks(booksData);
-    });
+  const unsubscribeBooks = onSnapshot(booksQuery, (snapshot) => {
+    const booksData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setBooks(booksData);
+  });
 
-    return () => {
-        unsubscribeAuth();
-        unsubscribeBooks();
-    };
-}, [user, navigate]);
+  return () => unsubscribeBooks(); // ← only books cleanup here
+}, [user]);
 
 async function addBook(title, author, cover, country) {
     if (!country) {
       alert('Please select a country for the book.');
       return;
     }
+    const alreadySaved = books.some(        
+      b => b.title.toLowerCase() === title.toLowerCase()
+    );
+    if (alreadySaved) {
+      alert('This book is already in your list.');
+      return;
+    }
+
     if (user) {
       try {
         await addDoc(collection(db, 'books'), {
@@ -57,7 +64,7 @@ async function addBook(title, author, cover, country) {
           author,
           cover,
           country,
-          addedAt: new Date(),
+          timestamp: new Date(),
         });
       } catch (e) {
         console.error('Error adding book: ', e);
@@ -66,7 +73,7 @@ async function addBook(title, author, cover, country) {
   }
 
   function handleSignOut() {
-    signOut(auth);
+    signOut(auth).then(() => navigate('/login'));
   }
 
   const readCountries = books.map(book => book.country);
@@ -75,6 +82,7 @@ async function addBook(title, author, cover, country) {
     <div id="app-wrapper">
       <header id="header"> 
         <h1>Book Explorer</h1>
+         <button className="signout-btn" onClick={handleSignOut}>Sign Out</button>
       </header>
 
       <main id="main-content">
@@ -85,22 +93,12 @@ async function addBook(title, author, cover, country) {
         </div>
 
         <aside id="side-panel">
-          <BookSearch addBook={addBook} />
-          <div id="book-list">
-            {books.map((book) => (
-              <BookItemComponent
-                key={book.id}
-                title={book.title}
-                author={book.author}
-                cover={book.cover}
-                country={book.country}
-              />
-            ))}
-          </div>
-        </aside>
-      </main>
-    </div>
-  );
-}
+            <Stats books={books} />
+             <BookSearch addBook={addBook} />
+            </aside>
+        </main>
+        </div>
+    );
+    }
 
-export default App;
+    export default Home;

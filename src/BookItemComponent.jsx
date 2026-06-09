@@ -1,11 +1,11 @@
 function BookItemComponent({ title, author, cover, country }) {
     return (
-        <div className="book-item">
-            <img src={cover} alt={`${title} cover`} />
-            <div className="book-details">
+        <div className="book-card">
+            <img src={cover} alt={title} />
+            <div className="book-card-info">
                 <h3>{title}</h3>
+      <p className="book-country">{country}</p>
                 <p>{author}</p>
-                <p><em>{country}</em></p>
             </div>
         </div>
     );
